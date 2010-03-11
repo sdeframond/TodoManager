@@ -1,7 +1,7 @@
-one:
-  email: MyString
-  password: MyString
+valid:
+  email: toto@toto.com
+  crypted_password: valid_password
 
-two:
-  email: MyString
-  password: MyString
+invalid:
+  email: foo
+  crypted_password: foo
