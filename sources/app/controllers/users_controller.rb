@@ -1,45 +1,33 @@
 class UsersController < ApplicationController
+
+  before_filter :require_no_user, :only => [:new, :create]
+  before_filter :require_user, :only => [:edit, :update]
+
   def new
-    if current_user == nil
-      @user = User.new
-    else
-      redirect_to user_url(current_user)
-    end
+    @user = User.new
   end
   
   def create
-    if current_user == nil
-      @user = User.new(params[:user])
-      if @user.save
-        flash[:notice] = "Successfully created user."
-        redirect_to root_url
-      else
-        render :action => 'new'
-      end
+    @user = User.new(params[:user])
+    if @user.save
+      flash[:notice] = "Successfully created user."
+      redirect_to root_url
     else
-      redirect_to user_url(current_user)
+      render :action => 'new'
     end
   end
   
   def edit
-    if current_user != nil
-      @user = current_user
-    else
-      redirect_to new_user_session_url
-    end
+    @user = current_user
   end
   
   def update
-    if current_user != nil
-      @user = current_user
-      if @user.update_attributes(params[:user])
-        flash[:notice] = "Successfully updated user."
-        redirect_to root_url
-      else
-        render :action => 'edit'
-      end
+    @user = current_user
+    if @user.update_attributes(params[:user])
+      flash[:notice] = "Successfully updated user."
+      redirect_to root_url
     else
-      redirect_to new_user_session_url
+      render :action => 'edit'
     end
   end
 end

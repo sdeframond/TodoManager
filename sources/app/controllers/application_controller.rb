@@ -22,4 +22,20 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.record
   end
   
+  def require_user(redirect=nil)
+    unless current_user
+      redirect_to(redirect.nil? ? new_user_session_url : redirect)
+      return false
+    end
+    true
+  end
+  
+  def require_no_user(redirect=nil)
+    if current_user
+      redirect_to(redirect.nil? ? user_url(current_user) : redirect)
+      return false
+    end
+    true
+  end
+  
 end

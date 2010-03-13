@@ -27,7 +27,7 @@ describe UserSessionsController do
       response.should redirect_to root_url
     end
 
-    describe UserSessionsController, "create (login) action" do
+    describe "create (login) action" do
       
       it "should redirect to root with notice on successful login" do
         post :create, :user_session => @valid_attributes
@@ -55,16 +55,16 @@ describe UserSessionsController do
         UserSession.create(User.first)
     end
     
-    it "new action should redirect to root" do
+    it "new action should redirect to user's page" do
       get :new
-      response.should redirect_to root_url
+      response.should redirect_to user_url(users(:toto))
     end
     
-    it "create action should redirect to root" do
+    it "create action should redirect to user's page" do
       post :create
-      response.should redirect_to root_url
+      response.should redirect_to user_url(users(:toto))
     end
-
+    
     describe UserSessionsController, "destroy (logout) action" do
       
       it "should redirect to root with notice" do

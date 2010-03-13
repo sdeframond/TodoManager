@@ -1,6 +1,6 @@
 class PasswordResetsController < ApplicationController
   
-  before_filter :require_no_user
+  before_filter :require_no_user, :only => [:new, :create]
   before_filter :load_user_using_perishable_token, :only => [:edit, :update]
    
   def new  
@@ -9,10 +9,10 @@ class PasswordResetsController < ApplicationController
     
   def create  
     @user = User.find_by_email(params[:email])  
-    if @user  
+    if @user
       @user.deliver_password_reset_instructions!  
-      flash[:notice] = "Instructions to reset your password have been emailed to you. " +  
-      "Please check your email."  
+      flash[:notice] = "Instructions to reset your password have been " +
+        "emailed to you. Please check your email."  
       redirect_to root_url  
     else  
       flash[:notice] = "No user was found with that email address"  
@@ -26,10 +26,10 @@ class PasswordResetsController < ApplicationController
   
   def update
     @user.password = params[:user][:password]
-    @user.password_confirmation = params[:users][:password_confirmation]
+    @user.password_confirmation = params[:user][:password_confirmation]
     if @user.save
       flash[:notice] = "Password updated !"
-      redirect_to user_url(:current)
+      redirect_to user_url(@user)
     else
       render :action => :edit
     end
@@ -37,17 +37,15 @@ class PasswordResetsController < ApplicationController
   
   private
   
-  def require_no_user
-    unless current_user
-      redirect_to user_url(:current)
-    end
-  end
-  
   def load_user_using_perishable_token
-    @user = User.find_using_perishable_token(params[:id])
-    unless @user
-      flash[:notice] = "Oooops ! This token doesn't work"
-      redirect_to root_url
+    if current_user == nil
+      @user = User.find_using_perishable_token(params[:id])
+      unless @user
+        flash[:notice] = "Oooops ! This token doesn't work"
+        redirect_to root_url
+      end
+    else
+      @user = current_user
     end
   end
   
