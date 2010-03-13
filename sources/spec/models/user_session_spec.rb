@@ -1,15 +1,16 @@
 require File.expand_path(File.dirname(__FILE__)  + '/../spec_helper')
 
-describe User do
+describe UserSession do
+  fixtures :users
   before(:each) do
+    activate_authlogic
     @valid_attributes = {
-      :password => "12345678",
-      :password_confirmation => "12345678",
-      :email => "newuser@newuser.com",
+      :password => "toto",
+      :email => "toto@toto.com",
     }
   end
 
   it "should create a new instance given valid attributes" do
-    User.create!(@valid_attributes)
+    UserSession.create!(@valid_attributes)
   end
 end
