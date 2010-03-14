@@ -1,8 +1,8 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  user: toto
-  todo_item: 
+  owner: toto
+  parent: 
   name: MyTask
   description: MyTaskDescritpion 
   due_date: 2010-03-14 01:54:21
@@ -10,10 +10,19 @@ one:
   complete: false
 
 two:
-  user: toto
-  todo_item: one
+  owner: toto
+  parent: one
   name: MySubtask
   description: MySubtaskDescription
   due_date: 2010-03-14 01:54:21
+  priority: 1
+  complete: false
+
+three:
+  owner: tata
+  parent:
+  name: MyTask
+  description: MyTaskDescription
+  due_date: 2010-03-15 01:54:21
   priority: 1
   complete: false
