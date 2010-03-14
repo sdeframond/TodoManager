@@ -10,9 +10,9 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
       flash[:notice] = "Successfully created user session."
-      redirect_to root_url
+      render :json => true
     else
-      render :action => 'new'
+      render :json => false
     end
   end
   
@@ -21,7 +21,9 @@ class UserSessionsController < ApplicationController
     if @user_session
       @user_session.destroy
       flash[:notice] = "Successfully destroyed user session."
+      render :json => true
+    else
+      render :json => false
     end
-    redirect_to root_url
   end
 end

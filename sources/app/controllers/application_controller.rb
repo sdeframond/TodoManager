@@ -22,17 +22,25 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.record
   end
   
-  def require_user(redirect=nil)
+  def require_user(redirection=nil)
     unless current_user
-      redirect_to(redirect.nil? ? new_user_session_url : redirect)
+      if redirection
+        redirect_to redirection
+      else
+        render :status => :forbidden
+      end
       return false
     end
     true
   end
   
-  def require_no_user(redirect=nil)
+  def require_no_user(redirection=nil)
     if current_user
-      redirect_to(redirect.nil? ? user_url(current_user) : redirect)
+      if redirection
+        redirect_to redirection
+      else
+        render :json => false
+      end
       return false
     end
     true

@@ -7,37 +7,32 @@ describe UsersController do
   end
   
   describe "when not logged in" do
-    
-    it "edit action should redirect to the login page" do
-      get :edit
-      response.should redirect_to(new_user_session_url)
+
+    it "account action should return 403 Forbidden status" do
+      get :account
+      response.code.should == "403"
     end
 
-    it "update action should redirect to the login page" do
+    it "update action should return 403 Forbidden status" do
       post :update
-      response.should redirect_to(new_user_session_url)
-    end
-  
-    it "new action should render new form" do
-      get :new
-      response.should render_template(:new)
+      response.code.should == "403"
     end
 
-    describe UsersController, "create action" do
+    describe "create action" do
       
-      it "should redirect to root with a notice on successful save" do
+      it "should return true on successful save" do
         User.any_instance.stubs(:valid?).returns(true)
         post :create
-        flash[:notice].should_not be_nil
+        #flash[:notice].should_not be_nil
         assigns[:user].should_not be_new_record
-        response.should redirect_to(root_url)
+        response.should have_text(true.to_json)
       end
       
-      it "should re-render new template on failed save" do
+      it "should return false on failed save" do
         User.any_instance.stubs(:valid?).returns(false)
         post :create
         assigns[:user].should be_new_record
-        response.should render_template(:new)
+        response.should have_text(false.to_json)
       end
       
       it "should pass parameters to the user" do
@@ -52,39 +47,34 @@ describe UsersController do
       UserSession.create(User.first)
     end
     
-    it "new action should redirect to user account" do
-      get :new
-      response.should redirect_to user_url(User.first)
-    end
-
-    it "create action should redirect to user account" do
+    it "create action should return false" do
       post :create
-      response.should redirect_to user_url(User.first)
+      response.should have_text(false.to_json)
     end
     
-    it "edit action should render edit form" do
-      get :edit, :id => User.first
-      response.should render_template(:edit)
+    it "account action should return the current user" do
+      post :account
+      response.should have_text(User.first.to_json)
     end
 
-    describe UsersController, "update action" do
+    describe "update action" do
       
       it "should pass parameters to the user" do
         post :update, :id => User.first, :user => {:email => 'test@test.test'}
         assigns[:user].email.should == 'test@test.test'
       end
 
-      it "should redirect to root with notice on successful update" do
+      it "should return true on successful update" do
         User.any_instance.stubs(:valid?).returns(true)
         post :update, :id => User.first
-        flash[:notice].should_not be_nil
-        response.should redirect_to(root_url)
+        #flash[:notice].should_not be_nil
+        response.should have_text(true.to_json)
       end
       
-      it "should re-render edit template on failed update" do
+      it "should retrun false on failed update" do
         User.any_instance.stubs(:valid?).returns(false)
         post :update, :id => User.first
-        response.should render_template(:edit)
+        response.should have_text(false.to_json)
       end
     end
   end
