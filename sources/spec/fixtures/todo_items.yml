@@ -1,19 +1,19 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  user: 
+  user: toto
   todo_item: 
-  name: MyString
-  description: MyString
+  name: MyTask
+  description: MyTaskDescritpion 
   due_date: 2010-03-14 01:54:21
   priority: 1
   complete: false
 
 two:
-  user: 
-  todo_item: 
-  name: MyString
-  description: MyString
+  user: toto
+  todo_item: one
+  name: MySubtask
+  description: MySubtaskDescription
   due_date: 2010-03-14 01:54:21
   priority: 1
   complete: false
