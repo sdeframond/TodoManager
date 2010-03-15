@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
       if redirection
         redirect_to redirection
       else
-        render :status => :forbidden
+        render :nothing => true, :status => :forbidden
       end
       return false
     end
