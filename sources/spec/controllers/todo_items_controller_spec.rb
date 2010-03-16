@@ -50,18 +50,24 @@ describe TodoItemsController do
     
     describe "create action" do
       it "should pass parameters to the todo item" do
-        post :create, :todo_item => @valid_attributes
+        post :create,
+          :user_id => UserSession.find,
+          :todo_item => @valid_attributes
         assigns[:todo_item].name.should == @valid_attributes[:name]
       end
       it "should return true on successful save" do
         TodoItem.any_instance.stubs(:valid?).returns(true)
-        post :create
+        post :create,
+          :user_id => UserSession.find,
+          :todo_item => @valid_attributes
         assigns[:todo_item].should_not be_new_record
         response.should have_text true.to_json
       end
       it "should return false on failed save" do
         TodoItem.any_instance.stubs(:valid?).returns(false)
-        post :create
+        post :create,
+          :user_id => UserSession.find,
+          :todo_item => @valid_attributes
         assigns[:todo_item].should be_new_record
         response.should have_text false.to_json
       end
@@ -69,25 +75,25 @@ describe TodoItemsController do
     
     describe "update action" do
       it "should return 404 when item does not exist" do
-        post :update, :id => -1
+        put :update, :id => -1
         response.code.should == "404"
       end
       it "should return 404 when item does not belong to the current user" do
-        post :update, :id => todo_items(:three)
+        put :update, :id => todo_items(:three)
         response.code.should == "404"
       end
       it "should pass parameters to the todo item" do
-        post :update, :id => todo_items(:one), :todo_item => @valid_attributes
+        put :update, :id => todo_items(:one), :todo_item => @valid_attributes
         assigns[:todo_item].name.should == @valid_attributes[:name]
       end
       it "should return true on successful update" do
         TodoItem.any_instance.stubs(:valid?).returns(true)
-        post :update, :id => todo_items(:one)
+        put :update, :id => todo_items(:one)
         response.should have_text true.to_json
       end
       it "should return false on failed update" do
         TodoItem.any_instance.stubs(:valid?).returns(false)
-        post :update, :id => todo_items(:one)
+        put :update, :id => todo_items(:one)
         response.should have_text false.to_json
       end
     end
@@ -104,16 +110,18 @@ describe TodoItemsController do
     end
     
     it "index should return 403 status code" do
-      get :index
+      get :index, :user_id => User.first
     end
     it "show should return 403 status code" do
-      get :show
+      get :show, :id => TodoItem.first
     end
     it "create should return 403 status code" do
-      post :create
+      post :create,
+        :user_id => User.first,
+        :todo_item => @valid_attributes
     end
     it "update should return 403 status code" do
-      post :update
+      put :update, :id => TodoItem.first
     end
   end
 end

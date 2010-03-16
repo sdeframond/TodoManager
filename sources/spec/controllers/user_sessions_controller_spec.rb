@@ -17,7 +17,7 @@ describe UserSessionsController do
   describe "when not logged in" do
     
     it "destroy action should return false" do
-      get :destroy
+      delete :destroy, :id => 1
       response.should have_text(false.to_json)
     end
 
@@ -57,13 +57,13 @@ describe UserSessionsController do
     describe "destroy (logout) action" do
       
       it "should return true" do
-        get :destroy
+        delete :destroy, :id => UserSession.find
         #flash[:notice].should_not be_nil
         response.should have_text(true.to_json)
       end
       
       it "should destroy session" do
-        get :destroy
+        delete :destroy, :id => UserSession.find
         UserSession.find.should be_nil
       end
     end

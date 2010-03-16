@@ -9,12 +9,12 @@ describe UsersController do
   describe "when not logged in" do
 
     it "account action should return 403 Forbidden status" do
-      get :account
+      get :account, :id => User.first
       response.code.should == "403"
     end
 
     it "update action should return 403 Forbidden status" do
-      post :update
+      put :update, :id => User.first
       response.code.should == "403"
     end
 
@@ -60,20 +60,20 @@ describe UsersController do
     describe "update action" do
       
       it "should pass parameters to the user" do
-        post :update, :id => User.first, :user => {:email => 'test@test.test'}
+        put :update, :id => User.first, :user => {:email => 'test@test.test'}
         assigns[:user].email.should == 'test@test.test'
       end
 
       it "should return true on successful update" do
         User.any_instance.stubs(:valid?).returns(true)
-        post :update, :id => User.first
+        put :update, :id => User.first
         #flash[:notice].should_not be_nil
         response.should have_text(true.to_json)
       end
       
       it "should retrun false on failed update" do
         User.any_instance.stubs(:valid?).returns(false)
-        post :update, :id => User.first
+        put :update, :id => User.first
         response.should have_text(false.to_json)
       end
     end
